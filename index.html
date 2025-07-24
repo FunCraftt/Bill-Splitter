@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Splitter</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        body {
+            background: #F5A04E;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            padding: 32px 24px;
+        }
+
+        h1 {
+            color: #F5A04E;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #F5A04E;
+            border-color: #F5A04E;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: #EBC344;
+            border-color: #EBC344;
+            color: #333;
+        }
+
+        .btn-success {
+            background-color: #EBC344;
+            border-color: #EBC344;
+            color: #333;
+        }
+
+        .btn-success:hover,
+        .btn-success:focus {
+            background-color: #F5A04E;
+            border-color: #F5A04E;
+            color: #fff;
+        }
+
+        label {
+            color: #F5A04E;
+            font-weight: 500;
+        }
+
+        #results {
+            background: #EBC344;
+            border-radius: 8px;
+            padding: 16px;
+            color: #333;
+        }
+
+        #expensesList .card {
+            border-left: 6px solid #F5A04E;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <!-- Add Expense Card -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-lg" style="border-radius: 20px;">
+                    <div class="card-body">
+                        <h1 class="mb-4 text-center" style="color:#F5A04E;">Bill Splitter</h1>
+                        <form id="expenseForm" class="mb-4">
+                            <div class="mb-3">
+                                <label class="form-label">Who paid and how much?</label>
+                                <div id="payersList">
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control payer-name" placeholder="Name">
+                                        <input type="number" class="form-control payer-amount" placeholder="Amount"
+                                            min="0" step="0.01">
+                                    </div>
+                                </div>
+                                <button type="button" id="addPayerBtn" class="btn btn-sm btn-secondary mb-2">Add Another
+                                    Payer</button>
+                            </div>
+                            <div class="mb-3">
+                                <label for="item" class="form-label">What was paid for?</label>
+                                <input type="text" class="form-control" id="item" name="item" required
+                                    placeholder="E.g. Hotel, Dinner, Drinks">
+                            </div>
+                            <div class="mb-3">
+                                <label for="participants" class="form-label">Who was this for?</label>
+                                <input type="text" class="form-control" id="participants" name="participants" required
+                                    placeholder="Comma separated names (e.g. Alice,Bob)">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100"
+                                style="background:#F5A04E;border-color:#F5A04E;">Add Expense</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Expense Details Card -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-lg" style="border-radius: 20px;">
+                    <div class="card-body">
+                        <h3 class="mb-3 text-center" style="color:#F5A04E;">Expense Details</h3>
+                        <div id="expensesList"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Results Card -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-lg" style="border-radius: 20px;">
+                    <div class="card-body">
+                        <h3 class="mb-3 text-center" style="color:#EBC344;">Results</h3>
+                        <div id="results" style="background:#EBC344;border-radius:8px;padding:16px;color:#333;">
+                            <h5 class="text-center">Results</h5>
+                        </div>
+                        <button type="button" class="btn btn-success w-100 mt-2" id="calculateBtn"
+                            style="background:#EBC344;border-color:#EBC344;color:#333;">Calculate Split</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Expense Modal -->
+    <div class="modal fade" id="editExpenseModal" tabindex="-1" aria-labelledby="editExpenseModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="border-radius:16px;">
+          <div class="modal-header" style="background:#F5A04E;">
+            <h5 class="modal-title" id="editExpenseModalLabel" style="color:#fff;">Edit Expense</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editExpenseForm">
+              <div class="mb-3">
+                <label class="form-label">Who paid and how much?</label>
+                <div id="editPayersList"></div>
+                <button type="button" id="editAddPayerBtn" class="btn btn-sm btn-secondary mb-2">Add Another Payer</button>
+              </div>
+              <div class="mb-3">
+                <label for="editItem" class="form-label">What was paid for?</label>
+                <input type="text" class="form-control" id="editItem" name="editItem" required>
+              </div>
+              <div class="mb-3">
+                <label for="editParticipants" class="form-label">Who was this for?</label>
+                <input type="text" class="form-control" id="editParticipants" name="editParticipants" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/all.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
